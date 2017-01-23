@@ -1,0 +1,127 @@
+<html>
+<head>
+	<title>Swiss Tournament</title>
+
+<link rel="stylesheet" href="styles/main.css">
+
+
+	<script src="scripts/main.js"></script>
+
+	<script src="scripts/lzString/lz-string.min.js"></script>
+	<script src="scripts/jquery-3.1.1.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+
+
+	<link rel="stylesheet" href="styles/bootstrap.min.css">
+	<link rel="stylesheet" href="styles/bootstrap-theme.min.css">
+
+</head>
+
+<body onLoad="addHandlers()">
+<body>
+
+<!-- navbar -->
+
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container navbar-container">
+	<span class="navbar-brand" id="tournament-name">Name Goes Here</span>
+		<ul class="nav navbar-nav pull-right">
+			<!-- <li><a href="#" onClick='instructions()'>Instructions</a></li> -->
+			<!-- <li><a href="#" onClick='about()'>About</a></li> -->
+		</ul>
+	</div>
+</nav>
+
+<!-- input buttons etc -->
+<div id="input-container">
+	<span>Tournament Name</span>
+	<div class="input-group">
+		<input type="text" name="tournamentname" class="form-control" value="Tournament">
+	</div>
+
+	<span>Number of Players</span>
+	<div class="input-group">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number" disabled="disabled" 
+			data-type="minus" data-field="players">
+				<!-- <span class="glyphicon glyphicon-minus"></span> -->-
+			</button>
+		</span>
+		<input type="text" name="players" class="form-control input-number" value="6" min="1" max="32">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number" data-type="plus" data-field="players">
+				<!-- <span class="glyphicon glyphicon-plus"></span> -->+
+			</button>
+		</span>
+	</div>
+
+	<span>Number of Rounds</span>
+	<div class="input-group">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number" disabled="disabled" 
+			data-type="minus" data-field="rounds">
+				<!-- <span class="glyphicon glyphicon-minus"></span> -->-
+			</button>
+		</span>
+		<input type="text" name="rounds" class="form-control input-number" value="4" min="1" max="32">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number" data-type="plus" data-field="rounds">
+				<!-- <span class="glyphicon glyphicon-plus"></span> -->+
+			</button>
+		</span>
+	</div>
+
+	<div>
+		<button type="button" class="btn btn-default" onclick="go()">
+			Go
+		</button>
+	</div>
+
+</div>
+
+<!-- main page -->
+<div class="container">
+
+	<div id='table-container'>
+		<span id="table"></span>
+	</div>
+
+	<div id='names-container'>
+		<span id="names"></span>
+	</div>	
+
+	<div id='bracket-container'>
+		<span id="bracket"></span>
+	</div>
+
+	<div>
+		<span id="debug"></span>
+	</div>
+
+</div>
+
+
+	<div class="modal fade bs-example-modal-sm" id="aboutModal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-sm">
+	    <div class="modal-content">
+			<div class="modal-header" style="background-color: brown; color: white">
+			    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			    <h4 class="modal-title" id="myModalLabel">About</h4>
+			</div>
+	   		<div class="modal-body">
+				<p>
+	   			Hi
+
+	       	</div>
+	    </div>
+	  </div>
+	</div>
+
+<script type="text/javascript">
+
+
+// go();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+body {
+    font-family: "Roboto", sans-serif;
+    padding-top: 60px;
+}
+
+/* navbar */
+.navbar-default {
+  background-color: #272822;
+  border-color: #eeeeee;
+}
+
+/* For input buttons */
+#input-container {
+	width: 400px;
+    margin: auto;
+    padding: 2px;
+}
+
+.input-group {
+	padding-bottom: 20px;
+}
+
+/* player name entry */
+.playername {
+	padding-bottom: 20px;
+}
+
+/* table */
+
+/* bracket */
+
+.matchup {
+	padding-bottom: 20px;
+}
+
+.round {
+	width: 200px;
+}
+
+/*.player, .player-radio-button {
+	float: left;
+}*/
+
+
+
+
+#go {
+	float: right;
+    margin-top: 2px;
+}
+
+#restartBox {
+	display: none;
+}
+
+.phase {
+	/*background-color: #d9edf7 !important;*/
+	background: -webkit-linear-gradient(#848484, #333333) !important;; /* For Safari 5.1 to 6.0 */
+  	background: -o-linear-gradient(#848484, #333333) !important;; /* For Opera 11.1 to 12.0 */
+  	background: -moz-linear-gradient(#848484, #333333) !important;; /* For Firefox 3.6 to 15 */
+  	background: linear-gradient(#848484, #333333) !important;; /* Standard syntax */
+    font-weight: bold !important;
+    color: white !important;
+    text-shadow: 1px 1px black;
+}
+
+#rules-container {
+	padding-top: 40px;
+	clear: both;
+}
+
+.panel {
+	padding: 2px;
+	margin-bottom: 2px !important;
+}
+
+.panel-body {
+	padding-bottom: 2px !important;
+}
+
+.rule {
+	clear: both;
+	/*min-height: 30px;*/
+}
+
+.unit-name {
+	float: left;
+	/*height: 30px;*/
+	line-height: 30px;
+	vertical-align: middle;
+	font-size: 16px;
+	font-variant: small-caps;
+	padding-right: 10px;
+}
+
+.rule-name {
+	float: left;
+	/*height: 30px;*/
+	line-height: 30px;
+	vertical-align: middle;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.icon {
+	height : 30px;
+	/*min-width: 100px;*/
+	float: left;
+	padding-right: 4px;
+	border: 1px solid #ccc;
+}
+
+.checkbox-container {
+	height: 30px;
+	float : left;
+	/*border: 1px solid #ccc;*/
+	/*border-radius: 2px;*/
+	padding-right: 4px;
+	line-height: 30px;
+	vertical-align: center;
+}
+
+.rounded-corners {
+	border-radius: 12px;
+}
+
+.buff {
+	background: #63c125;
+}
+
+.debuff {
+	background: #ae0000;
+}
+
+.reroll {
+	background: #4286f4;
+}
+
+.save {
+	background: #f4df42;
+}
+
+.other {
+	display : none;
+}
+
+.icon-img {
+	background-size: 30px;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    color: transparent;
+    /*float: left;*/
+}
+
+.buff .icon-img {
+	background-image: url("../images/buff.png");
+}
+
+.debuff .icon-img {
+	background-image: url("../images/debuff.png");
+}
+
+.reroll .icon-img {
+	background-image: url("../images/dice.png");
+}
+
+.save .icon-img {
+	background-image: url("../images/shield.png");
+}
+
+
+.icon-text {
+	font-weight: bold;
+	height: 30px;
+    line-height: 30px;`
+	vertical-align: middle;
+    display: inline;
+}
+
+.description-container {
+	font-size: 10px;
+	vertical-align: center;
+	/*line-height: 30px;*/
+}
+
+.description-container .description {
+}
+
+#missing-container {
+	padding-top: 100px;
+}
+
+.keyword {
+	font-variant: small-caps;
+	font-weight: bold;
+}
+
