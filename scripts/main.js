@@ -70,29 +70,73 @@ function getPlayersForRound(roundNumber) {
     for(var i=1; i <= games; i++) {
         html += "<div class='panel panel-default matchup'>";
         html += "<div class='panel-heading'>Game " + i + "</div>";
+        html += "<ul class='list-group'>";
 
         playerA = players[(i*2) - 2];
         playerB = players[(i*2) - 1];
-        console.log("game: " + i);
-        console.log("a: " + playerA.name);
-        console.log("b: " + playerB.name);
 
-        html += playerRow(playerA.name, i);
-        html += playerRow(playerB.name, i);
+        html += playerRow('a', playerA.name, roundNumber, i);
+        html += playerRow('b', playerB.name, roundNumber, i);
         html += "</div>";
 
     }
 
-    html += "</div></div>";
+    html += "</div><div id='confirm-round" + roundNumber + "''><button class='btn btn-default' onclick='confirmRound(" + roundNumber + ")'>Confirm Results</button></div></div>";
     $('#bracket').append(html);
 
+
+    for(var i=1; i <= games; i++) {
+
+        addHandlersToCheckBoxes('a', roundNumber, i);
+        addHandlersToCheckBoxes('b', roundNumber, i);
+    }
 }
 
-function playerRow(playerName, gameNumber) {
-    html =  "<div class='player panel-body'><div class='player'>" + playerName + "</div>";
-    html += "<div class='player-radio-button'><input type='radio' name='game" + gameNumber + "'></div></div>"
+function addHandlersToCheckBoxes(aOrB, roundNumber, gameNumber) {
+        
+    $('#winner-checkbox-' + roundNumber + "-" + gameNumber + "-" + aOrB).change(function() {
+        winnerA = $('#winner-' + roundNumber + "-" + gameNumber + "-a");
+        winnerB = $('#winner-' + roundNumber + "-" + gameNumber + "-b");
+
+        winnerAVisible = winnerA.is(':visible')
+        winnerBVisible = winnerB.is(':visible')
+
+        if (!winnerAVisible && !winnerBVisible) {
+            $('#winner-' + roundNumber + "-" + gameNumber + "-" + aOrB).show();
+        } else {
+            $('#winner-' + roundNumber + "-" + gameNumber + "-a").toggle();
+            $('#winner-' + roundNumber + "-" + gameNumber + "-b").toggle();
+        }
+    });
+}
+
+function playerRow(aOrB, playerName, roundNumber, gameNumber) {
+    html =  "<li class='list-group-item'><div class='player'>" + playerName + "</div>";
+    html += "<div class='player-radio-button'><input type='radio' id='winner-checkbox-" + roundNumber + "-" + gameNumber + "-" + aOrB + "' name='game" + gameNumber + "' value='" + playerName + "'></div>";
+    html += "<div class='winner' id='winner-" + roundNumber + "-" + gameNumber + "-" + aOrB + "'>WINNER</div><div class='padding'></div></li>"
+
     return html;
 }
+
+function confirmRound(roundNumber) {
+
+    //todo - verify all results have been set
+
+    // save results to players
+    $('.player').each(function(i, obj) {
+        playerName = $(this).html();
+        // playerIndex = getPlayerIndex(playerName);
+        // players[playerIndex].win += 1;
+
+    });
+
+    //todo - save the matchups so they don't occur again
+
+    $('#confirm-round' + roundNumber).hide();
+
+    getPlayersForRound(roundNumber + 1);
+}
+
 function addHandlers() {
 
 

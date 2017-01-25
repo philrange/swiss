@@ -25,19 +25,41 @@ body {
 	padding-bottom: 20px;
 }
 
+
 /* table */
 
 /* bracket */
 
-.matchup {
+/*.matchup {
 	padding-bottom: 20px;
-}
+}*/
 
 .round {
 	width: 200px;
+	float: left;
+	margin-right: 10px;
 }
 
-/*.player, .player-radio-button {
+.player {
+	float: left;
+	padding-right: 10px;
+}
+
+.player-radio-button {
+	float: left;
+	padding-right: 10px;
+}
+
+.winner {
+	display: none;
+	float: left;
+}
+
+.padding {
+	height: 20px;
+}
+
+/*.player-radio-button {
 	float: left;
 }*/
 
