@@ -7,7 +7,6 @@ function go() {
 }
 
 function setup() {
-    // $('#restartBox').toggle();
 
     tournamentName = $('[name="tournamentname"]').val();
     numberOfPlayers = $('[name="players"]').val();
@@ -23,7 +22,7 @@ function setup() {
     $('#names').append("<h3>Enter Player Names</h3>");
 
     players.forEach(function(player) {
-        $('#names').append(buildPlayerBox(player.name));
+        $('#names').append(buildPlayerBox(player.displayName));
     });
 
     // add button to finalise
@@ -36,13 +35,16 @@ function buildPlayerBox(name) {
 }
 
 function buildPlayer(i){
-     return {name:"Player " + i, win:0, lose:0, draw:0};
+     return {displayName:"Player " + i, win:0, lose:0, draw:0, alreadyPlayed: []};
 }
 
 function finalise() {
 
     $('.playername').each(function(i, obj) {
-        players[i].name = $(this).find("input").val();
+        displayName = $(this).find("input").val();
+        players[i].displayName = displayName;
+        name = displayName.replace(/\s+/g, '');
+        players[i].name = name;
     });
 
     $('#names-container').animate({width:'toggle'},700, getPlayersForRound(1));
@@ -51,17 +53,16 @@ function finalise() {
 
 function getPlayersForRound(roundNumber) {
 
-    html ='<div class="round"><h3>Round ' + roundNumber + '</h3>';
+    var html = '<div class="round"><h3>Round ' + roundNumber + '</h3>';
 
-    // todo - shuffle to make sure people don't play same opposition twice
-        b = players[5];
-        players[5] = players[0];
-        players[0] = b;
-    //
+    //sort so people play with players with a similar score
+    sortPlayersByScore();
 
-    players.forEach(function(player) {
-        console.log(player.name);
-    });
+    //update table while players are in score order, before shuffling
+    updateTable(roundNumber - 1);
+
+    //shuffle to make sure people don't play same opposition twice
+    shufflePlayers();
 
     games = numberOfPlayers / 2;
 
@@ -75,13 +76,15 @@ function getPlayersForRound(roundNumber) {
         playerA = players[(i*2) - 2];
         playerB = players[(i*2) - 1];
 
-        html += playerRow('a', playerA.name, roundNumber, i);
-        html += playerRow('b', playerB.name, roundNumber, i);
+        html += playerRow('a', playerA, roundNumber, i);
+        html += playerRow('b', playerB, roundNumber, i);
         html += "</div>";
 
     }
 
-    html += "</div><div id='confirm-round" + roundNumber + "''><button class='btn btn-default' onclick='confirmRound(" + roundNumber + ")'>Confirm Results</button></div></div>";
+    html += "</div><div id='confirm-round" + roundNumber + "'>";
+    html += "<button class='btn btn-default' onclick='confirmRound(" + roundNumber + ")'>Confirm Results</button></div>";
+    html += "<span id='confirm-round-message-" + roundNumber + "'></span></div>";
     $('#bracket').append(html);
 
 
@@ -89,6 +92,96 @@ function getPlayersForRound(roundNumber) {
 
         addHandlersToCheckBoxes('a', roundNumber, i);
         addHandlersToCheckBoxes('b', roundNumber, i);
+    }
+}
+
+function sortPlayersByScore() {
+
+    players.sort(function(a, b) {
+        return b.win - a.win;
+    });
+}
+
+function logOutPlayerOrder() {
+    players.forEach(function(player) {
+        console.log(player.name + " " + player.displayName + " " + player.win + " " + player.lose + " " + player.alreadyPlayed);
+    });
+}
+
+function shufflePlayers () {
+    games = numberOfPlayers / 2;
+
+    for(var i=1; i <= games; i++) {
+
+        playerA = players[(i*2) - 2];
+        playerB = players[(i*2) - 1];
+
+        if (hasPlayedYet(playerA, playerB)) {
+            // console.log("has already played " + playerA.name + " " + playerB.name);
+            //find next unplayed
+            nextUnplayed = findNextUnplayed(playerA);
+            reverse = false;
+            if (nextUnplayed == null) {
+                nextUnplayed = findNextUnplayedReverse(playerB);
+                reverse = true;
+            }
+
+            if (reverse) {
+                //swap a with previous unplayed
+                playerAIndex = players.indexOf(playerA);
+                nextUnplayedIndex = players.indexOf(nextUnplayed);
+
+                // console.log("Swapping " + playerA.name + " with " + nextUnplayed.name);
+                players[playerAIndex] = nextUnplayed;
+                players[nextUnplayedIndex] = playerA;
+            } else {
+                //swap b with next unplayed
+                playerBIndex = players.indexOf(playerB);
+                nextUnplayedIndex = players.indexOf(nextUnplayed);
+
+                // console.log("Swapping " + playerB.name + " with " + nextUnplayed.name);
+                players[playerBIndex] = nextUnplayed;
+                players[nextUnplayedIndex] = playerB;
+            }
+        }
+    }
+}
+
+function hasPlayedYet(player, opponent) {
+    return $.inArray(opponent.name, player.alreadyPlayed) > -1;
+}
+
+function findNextUnplayed(player) {
+    foundPlayer = false;
+    for (var i = 0; i < players.length; i++) {
+        opponent = players[i];
+
+        if (!foundPlayer) {
+            if (opponent.name == player.name) {
+                foundPlayer = true;
+            }
+        } else {
+            if (!hasPlayedYet(player, opponent)) {
+                return opponent;
+            }
+        }
+    }
+}
+
+function findNextUnplayedReverse(player) {
+    foundPlayer = false;
+    for (var i = players.length - 1; i >= 0 ; i--) {
+        opponent = players[i];
+
+        if (!foundPlayer) {
+            if (opponent.name == player.name) {
+                foundPlayer = true;
+            }
+        } else {
+            if (!hasPlayedYet(player, opponent)) {
+                return opponent;
+            }
+        }
     }
 }
 
@@ -110,9 +203,9 @@ function addHandlersToCheckBoxes(aOrB, roundNumber, gameNumber) {
     });
 }
 
-function playerRow(aOrB, playerName, roundNumber, gameNumber) {
-    html =  "<li class='list-group-item'><div class='player'>" + playerName + "</div>";
-    html += "<div class='player-radio-button'><input type='radio' id='winner-checkbox-" + roundNumber + "-" + gameNumber + "-" + aOrB + "' name='game" + gameNumber + "' value='" + playerName + "'></div>";
+function playerRow(aOrB, player, roundNumber, gameNumber) {
+    var html =  "<li class='list-group-item'><div class='player round" + roundNumber + "'>" + player.displayName + "</div>";
+    html += "<div class='player-radio-button'><input type='radio' id='winner-checkbox-" + roundNumber + "-" + gameNumber + "-" + aOrB + "' name='round" + roundNumber + "game" + gameNumber + "' value='" + player.name + "'></div>";
     html += "<div class='winner' id='winner-" + roundNumber + "-" + gameNumber + "-" + aOrB + "'>WINNER</div><div class='padding'></div></li>"
 
     return html;
@@ -120,27 +213,81 @@ function playerRow(aOrB, playerName, roundNumber, gameNumber) {
 
 function confirmRound(roundNumber) {
 
-    //todo - verify all results have been set
+    allGood = verifyResultsAreAllSet(roundNumber)
+    $('#confirm-round-message-' + roundNumber).html("");
+    //show warning if not all set, and return
+    if (!allGood) {
+        $('#confirm-round-message-' + roundNumber).append("<div class='alert alert-danger'>Need to select all winners</div>");
+        return;
+    };
 
-    // save results to players
-    $('.player').each(function(i, obj) {
-        playerName = $(this).html();
-        // playerIndex = getPlayerIndex(playerName);
-        // players[playerIndex].win += 1;
+    //save results to players
+    $('[id^=winner-checkbox-' + roundNumber + ']').each(function(i, obj) {
+        playerName = $(this).val();
+        player = players.filter(function(object) {
+            return object.name == playerName;
+        })[0];
 
+        isWinner = $(this).is(':checked');
+
+        if(isWinner){
+            player.win += 1;
+        } else {
+            player.lose += 1;
+        }
+
+        //save the matchups so they don't occur again
+        game = $(this).attr('name');
+        $('input[name=' + game + ']').each(function (i, object) {
+           possibleOpponent = $(this).val();
+           if (possibleOpponent != playerName) {
+                player.alreadyPlayed.push(possibleOpponent);
+           }
+        });
     });
-
-    //todo - save the matchups so they don't occur again
 
     $('#confirm-round' + roundNumber).hide();
 
-    getPlayersForRound(roundNumber + 1);
+    if (roundNumber < numberOfRounds) {
+        getPlayersForRound(roundNumber + 1);
+    }
+}
+
+function updateTable(roundNumber) {
+
+    var html = "<div class='standings'><h3>Standings After Round " + roundNumber + "</h3>";
+    html += "<table><tr><th>Position</th><th>Player</th><th>Won</th><th>Lost</th></tr>";
+    for (var i = 0; i < players.length; i++) {
+        html += tableRow(i + 1, players[i]);
+    }
+
+    html += "</table></div>"
+
+    console.log(html);
+
+    $('#table').html(html);
+}
+
+function tableRow(position, player) {
+    return "<tr><td>" + position + "</td><td>" + player.displayName + "</td><td>" + player.win + "</td><td>" + player.lose + "</td></tr>";
+}
+
+function verifyResultsAreAllSet (roundNumber) {
+
+    allSet = true;
+    $('[id^=winner-checkbox-' + roundNumber + ']').each(function(i, obj) {
+        game = $(this).attr('name');
+        allSetForThisGroup = $('input[name=' + game + ']:checked').length == 1;
+        if (!allSetForThisGroup) {
+            allSet = false;
+        }
+    });
+
+    return allSet;
 }
 
 function addHandlers() {
 
-
-    go();
 
 //For input buttons
 //plugin bootstrap minus and plus
