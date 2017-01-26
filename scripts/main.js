@@ -250,6 +250,9 @@ function confirmRound(roundNumber) {
 
     if (roundNumber < numberOfRounds) {
         getPlayersForRound(roundNumber + 1);
+    } else {
+        sortPlayersByScore();
+        updateTable(roundNumber);
     }
 }
 
